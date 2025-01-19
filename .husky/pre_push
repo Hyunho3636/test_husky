@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+protected_branches="^(main|developer)$"
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [[ "$current_branch" =~ $protected_branches ]]; then
+  echo "🚫 $current_branch 브랜치에 직접 푸시할 수 없습니다."
+  echo "풀 리퀘스트를 통해 변경사항을 제출해주세요."
+  exit 1
+fi
