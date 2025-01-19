@@ -1,0 +1,11 @@
+{
+  "name": "test_husky",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}
