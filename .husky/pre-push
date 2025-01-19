@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+const exec = require('child_process').execSync;
+
+// 현재 push하려는 브랜치 이름 가져오기
+const currentBranch = exec('git rev-parse --abbrev-ref HEAD').toString().trim();
+
+// 보호할 브랜치 목록
+const protectedBranches = ['main', 'develop'];
+
+// 현재 브랜치가 보호된 브랜치인지 확인
+if (protectedBranches.includes(currentBranch)) {
+  console.error('\x1b[31m%s\x1b[0m', `🚫 ${currentBranch} 브랜치로 직접 push할 수 없습니다.`);
+  console.log('Pull Request를 통해 코드를 병합해주세요.');
+  process.exit(1);
+}
+
+process.exit(0);
