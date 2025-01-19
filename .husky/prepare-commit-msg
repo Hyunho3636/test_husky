@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# package.json에서 버전 정보 추출
+VERSION=$(node -p "require('./package.json').version")
+
+# 기존 커밋 메시지 파일
+COMMIT_MSG_FILE=$1
+
+# 임시 파일 생성
+TEMP_FILE=$(mktemp)
+
+# 첫 줄을 읽어서 이미 [v${VERSION}]이 있는지 확인
+FIRST_LINE=$(head -n 1 $COMMIT_MSG_FILE)
+if [[ $FIRST_LINE != *"[v$VERSION]"* ]]; then
+    # 버전 정보 추가
+    echo -n "[v$VERSION] " > $TEMP_FILE
+    cat $COMMIT_MSG_FILE >> $TEMP_FILE
+    cat $TEMP_FILE > $COMMIT_MSG_FILE
+fi
+
+rm $TEMP_FILE
