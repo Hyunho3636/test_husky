@@ -1,11 +1,18 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/usr/bin/env node
 
-protected_branches="^(main|developer)$"
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+const exec = require('child_process').execSync;
 
-if [[ "$current_branch" =~ $protected_branches ]]; then
-  echo "🚫 $current_branch 브랜치에 직접 푸시할 수 없습니다."
-  echo "풀 리퀘스트를 통해 변경사항을 제출해주세요."
-  exit 1
-fi
+// 현재 push하려는 브랜치 이름 가져오기
+const currentBranch = exec('git rev-parse --abbrev-ref HEAD').toString().trim();
+
+// 보호할 브랜치 목록
+const protectedBranches = ['main', 'develop'];
+
+// 현재 브랜치가 보호된 브랜치인지 확인
+if (protectedBranches.includes(currentBranch)) {
+  console.error('\x1b[31m%s\x1b[0m', `🚫 ${currentBranch} 브랜치로 직접 push할 수 없습니다.`);
+  console.log('Pull Request를 통해 코드를 병합해주세요.');
+  process.exit(1);
+}
+
+process.exit(0);
